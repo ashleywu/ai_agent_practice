@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "ai-builders-coach": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@aibuilders/mcp-coach-server"
+      ],
+      "env": {
+        "AI_BUILDER_TOKEN": "sk_a0e0e71f_43e132e8652e5da50151514131a46a1d72ae"
+      }
+    }
+  }
+}
