@@ -40,9 +40,13 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
-EXPOSE 3000
+# Expose port (PORT will be set at runtime by Koyeb)
+EXPOSE 8000
 
-ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-CMD ["node", "server.js"]
+# Start application using PORT environment variable
+# Next.js standalone server.js automatically reads PORT from process.env.PORT
+# Use shell form (sh -c) to ensure environment variable expansion works correctly
+# PORT will be set by Koyeb at runtime
+CMD sh -c "node server.js"
