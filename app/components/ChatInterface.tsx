@@ -223,7 +223,7 @@ export default function ChatInterface({
                               remarkPlugins={[remarkGfm]}
                               components={{
                                 // Style code blocks
-                                code: ({ node, inline, className, children, ...props }: any) => {
+                                code: ({ inline, className, children, ...props }: any) => {
                                   return inline ? (
                                     <code className="bg-gray-700 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
                                       {children}

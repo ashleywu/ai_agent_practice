@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  chatgpt-clone:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - AI_BUILDER_API_KEY=${AI_BUILDER_API_KEY}
+      - AI_BUILDER_BASE_URL=${AI_BUILDER_BASE_URL:-https://space.ai-builders.com/backend}
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

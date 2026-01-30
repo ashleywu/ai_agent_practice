@@ -1,0 +1,43 @@
+# Debug Dockerfile - shows all output
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install bash for better error handling
+RUN apk add --no-cache bash
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Install dependencies with verbose output
+RUN npm ci --verbose 2>&1 | tee install.log
+
+# Copy all files
+COPY . .
+
+# List files to verify
+RUN echo "=== Files in /app ===" && ls -la
+RUN echo "=== Files in /app/app ===" && ls -la app/ || echo "app directory not found"
+
+# Set environment
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Try to build and capture all output
+RUN echo "=== Starting build ===" && \
+    npm run build 2>&1 | tee build.log && \
+    echo "=== Build completed successfully ===" || \
+    (echo "=== BUILD FAILED ===" && \
+     echo "=== Build log ===" && \
+     cat build.log && \
+     echo "=== TypeScript check ===" && \
+     npx tsc --noEmit 2>&1 || true && \
+     exit 1)
+
+# Set production environment for runtime
+ENV NODE_ENV=production
+
+# Expose port
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "start"]

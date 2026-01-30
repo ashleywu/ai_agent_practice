@@ -116,7 +116,9 @@ export default function Sidebar({
                   <>
                     <span className="flex-1 truncate text-sm cursor-pointer">{conv.title}</span>
                     {conv.systemMessage && (
-                      <Settings size={12} className="flex-shrink-0 text-gray-500" title="Has system message" />
+                      <div title="Has system message">
+                        <Settings size={12} className="flex-shrink-0 text-gray-500" />
+                      </div>
                     )}
                     {hoveredId === conv.id && (
                       <>

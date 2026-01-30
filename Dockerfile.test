@@ -1,0 +1,34 @@
+# Test Dockerfile - shows all build output
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy all files
+COPY . .
+
+# Verify files copied
+RUN echo "=== Verifying files ===" && \
+    ls -la && \
+    echo "=== App directory ===" && \
+    ls -la app/ && \
+    echo "=== Components ===" && \
+    ls -la app/components/ || echo "No components dir"
+
+# Set environment
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Try build - this will show the actual error
+RUN echo "=== Starting build ===" && npm run build
+
+# Set production environment
+ENV NODE_ENV=production
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
