@@ -61,7 +61,13 @@ export async function POST(request: NextRequest) {
     })
 
     if (!response.ok) {
-      const errorText = await response.text()
+      let errorText = ''
+      try {
+        errorText = await response.text()
+      } catch (e) {
+        errorText = `HTTP ${response.status} ${response.statusText}`
+      }
+      console.error('AI Builder API error:', response.status, errorText)
       return NextResponse.json(
         { error: `API error: ${response.status} - ${errorText}` },
         { status: response.status }
@@ -80,24 +86,41 @@ export async function POST(request: NextRequest) {
       })
     } else {
       // For non-streaming models, return the complete response as a stream-like format
-      const data = await response.json()
-      const content = data.choices?.[0]?.message?.content || ''
-      
-      // Convert to SSE format for consistency with frontend
-      const sseData = `data: ${JSON.stringify({
-        choices: [{
-          delta: { content: content },
-          finish_reason: 'stop'
-        }]
-      })}\n\ndata: [DONE]\n\n`
-      
-      return new NextResponse(sseData, {
-        headers: {
-          'Content-Type': 'text/event-stream',
-          'Cache-Control': 'no-cache',
-          'Connection': 'keep-alive',
-        },
-      })
+      try {
+        const data = await response.json()
+        const content = data.choices?.[0]?.message?.content || ''
+        
+        if (!content) {
+          console.error('No content in API response:', data)
+          return NextResponse.json(
+            { error: 'No content received from AI model' },
+            { status: 500 }
+          )
+        }
+        
+        // Convert to SSE format for consistency with frontend
+        const sseData = `data: ${JSON.stringify({
+          choices: [{
+            delta: { content: content },
+            finish_reason: 'stop'
+          }]
+        })}\n\ndata: [DONE]\n\n`
+        
+        return new NextResponse(sseData, {
+          headers: {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+          },
+        })
+      } catch (parseError) {
+        console.error('Error parsing non-streaming response:', parseError)
+        const errorText = await response.text().catch(() => 'Unknown error')
+        return NextResponse.json(
+          { error: `Failed to parse API response: ${errorText}` },
+          { status: 500 }
+        )
+      }
     }
   } catch (error) {
     console.error('Chat API error:', error)

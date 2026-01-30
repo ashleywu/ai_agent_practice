@@ -260,7 +260,7 @@ export default function Home() {
               try {
                 const parsed = JSON.parse(data)
                 const delta = parsed.choices?.[0]?.delta?.content
-                if (delta) {
+                if (delta !== undefined && delta !== null && delta !== '') {
                   assistantContent += delta
 
                   // Update the assistant message in real-time
@@ -308,6 +308,10 @@ export default function Home() {
       }
 
       // Replace streaming message with final message
+      if (!assistantContent.trim()) {
+        throw new Error('Empty response received from AI model')
+      }
+
       const assistantMessage: Message = {
         id: Date.now().toString(),
         role: 'assistant',
@@ -494,6 +498,10 @@ export default function Home() {
         }
 
         // Replace streaming message with final message
+        if (!assistantContent.trim()) {
+          throw new Error('Empty response received from AI model')
+        }
+
         const assistantMessage: Message = {
           id: Date.now().toString(),
           role: 'assistant',
@@ -627,7 +635,7 @@ export default function Home() {
               try {
                 const parsed = JSON.parse(data)
                 const delta = parsed.choices?.[0]?.delta?.content
-                if (delta) {
+                if (delta !== undefined && delta !== null && delta !== '') {
                   assistantContent += delta
 
                   setConversations((prev) =>
@@ -670,6 +678,10 @@ export default function Home() {
             }
           }
         }
+      }
+
+      if (!assistantContent.trim()) {
+        throw new Error('Empty response received from AI model')
       }
 
       const assistantMessage: Message = {

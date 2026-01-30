@@ -1,0 +1,12 @@
+{
+  "domains": [
+    "chatclonepractice.ai-builder.space"
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "/",
+      "permanent": false
+    }
+  ]
+}
