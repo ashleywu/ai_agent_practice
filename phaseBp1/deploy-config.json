@@ -1,6 +1,6 @@
 {
   "repo_url": "https://github.com/yourusername/your-repo",
-  "service_name": "pw_aha-catcher",
+  "service_name": "pw-aha-catcher",
   "branch": "main",
   "port": 8000,
   "env_vars": {

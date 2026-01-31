@@ -19,7 +19,7 @@ git push -u origin main
 
 #### 2. Deploy Using Script
 ```bash
-python deploy.py --repo-url https://github.com/YOUR_USERNAME/YOUR_REPO --service-name pw_aha-catcher
+python deploy.py --repo-url https://github.com/YOUR_USERNAME/YOUR_REPO --service-name pw-aha-catcher
 ```
 
 #### 3. Wait & Access
@@ -45,7 +45,7 @@ The platform automatically:
 python deploy.py --list
 
 # Or check specific deployment
-curl https://space.ai-builders.com/backend/v1/deployments/pw_aha-catcher \
+curl https://space.ai-builders.com/backend/v1/deployments/pw-aha-catcher \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 

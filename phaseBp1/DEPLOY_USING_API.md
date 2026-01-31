@@ -25,7 +25,7 @@ git push -u origin main
 ### Step 2: Deploy Using the Script
 
 ```bash
-python deploy.py --repo-url https://github.com/yourusername/your-repo --service-name pw_aha-catcher
+python deploy.py --repo-url https://github.com/yourusername/your-repo --service-name pw-aha-catcher
 ```
 
 The script will:
@@ -38,7 +38,7 @@ The script will:
 
 Once deployment is complete, you'll get a URL like:
 ```
-https://pw_aha-catcher.ai-builders.space
+https://pw-aha-catcher.ai-builders.space
 ```
 
 ## Manual Deployment (Using curl)
@@ -51,7 +51,7 @@ curl -X POST https://space.ai-builders.com/backend/v1/deployments \
   -H "Content-Type: application/json" \
   -d '{
     "repo_url": "https://github.com/yourusername/your-repo",
-    "service_name": "pw_aha-catcher",
+    "service_name": "pw-aha-catcher",
     "branch": "main",
     "port": 8000,
     "env_vars": {
@@ -140,7 +140,7 @@ git push
 # 2. Deploy
 python deploy.py \
   --repo-url https://github.com/yourusername/your-repo \
-  --service-name pw_aha-catcher \
+  --service-name pw-aha-catcher \
   --branch main
 
 # 3. Wait for deployment (script will poll automatically)
@@ -148,10 +148,10 @@ python deploy.py \
 # ✅ Deployment queued successfully!
 # ⏳ Waiting for deployment to complete...
 # ✅ Deployment finished with status: HEALTHY
-# 🌐 Your app is available at: https://pw_aha-catcher.ai-builders.space
+# 🌐 Your app is available at: https://pw-aha-catcher.ai-builders.space
 
 # 4. Test your app
-curl https://pw_aha-catcher.ai-builders.space/health
+curl https://pw-aha-catcher.ai-builders.space/health
 ```
 
 ## Notes

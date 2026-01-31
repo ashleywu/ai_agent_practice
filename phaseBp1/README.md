@@ -34,7 +34,7 @@ A simple web-based MVP for capturing "Aha!" moments with automatic transcription
    python deploy.py --repo-url https://github.com/YOUR_USERNAME/YOUR_REPO
    ```
 
-3. **Access**: `https://pw_aha-catcher.ai-builders.space`
+3. **Access**: `https://pw-aha-catcher.ai-builders.space`
 
 ## 📁 Project Structure
 

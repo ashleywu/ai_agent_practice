@@ -28,7 +28,7 @@ Your application is now ready to be deployed using the **AI Builder Platform API
 ### Option 1: Using Deployment Script (Recommended)
 
 ```bash
-python deploy.py --repo-url https://github.com/YOUR_USERNAME/YOUR_REPO --service-name pw_aha-catcher
+python deploy.py --repo-url https://github.com/YOUR_USERNAME/YOUR_REPO --service-name pw-aha-catcher
 ```
 
 ### Option 2: Using curl (Manual)
@@ -89,7 +89,7 @@ Your app uses (via deployment `env_vars`):
 
 3. **Access Your App**:
    ```
-   https://pw_aha-catcher.ai-builders.space
+   https://pw-aha-catcher.ai-builders.space
    ```
 
 ## 🧪 Testing Before Deployment
