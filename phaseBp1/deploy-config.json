@@ -1,0 +1,10 @@
+{
+  "repo_url": "https://github.com/yourusername/your-repo",
+  "service_name": "pw_aha-catcher",
+  "branch": "main",
+  "port": 8000,
+  "env_vars": {
+    "AI_BUILDER_BASE_URL": "https://space.ai-builders.com/backend",
+    "AI_BUILDER_API_KEY": "your_api_key_here"
+  }
+}
