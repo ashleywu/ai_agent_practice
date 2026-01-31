@@ -3,12 +3,12 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copy requirements and install dependencies
-COPY requirements.txt .
+COPY phaseBp1/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application files
-COPY app.py .
-COPY index.html .
+# Copy application files from phaseBp1 subdirectory
+COPY phaseBp1/app.py .
+COPY phaseBp1/index.html .
 
 # Expose port (can be overridden by PORT env var)
 # Default to 8000 for deployment platforms, but supports PORT env var
