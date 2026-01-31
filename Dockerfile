@@ -1,52 +1,28 @@
-# Stage 1: Dependencies
-FROM node:20-alpine AS deps
-RUN apk add --no-cache libc6-compat
+FROM python:3.11-slim
+
 WORKDIR /app
 
-# Copy package files
-COPY package.json package-lock.json* ./
-RUN npm ci
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Stage 2: Builder
-FROM node:20-alpine AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+# Copy application files
+COPY app.py .
+COPY index.html .
 
-# Set environment variables for build
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV NODE_ENV production
-
-# Verify files are copied
-RUN ls -la
-
-# Build the application with verbose output
-RUN npm run build || (echo "Build failed, checking logs..." && cat .next/trace || true && exit 1)
-
-# Stage 3: Runner
-FROM node:20-alpine AS runner
-WORKDIR /app
-
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-# Copy necessary files from builder
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
-
-# Expose port (PORT will be set at runtime by Koyeb)
+# Expose port (can be overridden by PORT env var)
+# Default to 8000 for deployment platforms, but supports PORT env var
 EXPOSE 8000
 
-ENV HOSTNAME "0.0.0.0"
+# Set environment variables
+# PORT will be set by deployment platform (Koyeb, etc.)
+ENV PORT=8000
+ENV PYTHONUNBUFFERED=1
 
-# Start application using PORT environment variable
-# Next.js standalone server.js automatically reads PORT from process.env.PORT
-# Use shell form (sh -c) to ensure environment variable expansion works correctly
-# PORT will be set by Koyeb at runtime
-CMD sh -c "node server.js"
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:${PORT}/health')"
+
+# Run the application
+# Use shell form to allow environment variable substitution
+CMD python -m uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000}
