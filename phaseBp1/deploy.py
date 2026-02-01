@@ -73,7 +73,7 @@ def deploy_to_platform(repo_url, service_name, branch="main", port=8000):
     
     try:
         # Use NO_PROXY to bypass proxy settings
-        response = requests.post(deployment_url, json=payload, headers=headers, proxies=NO_PROXY, timeout=60)
+        response = requests.post(deployment_url, json=payload, headers=headers, proxies=NO_PROXY, timeout=120)
         
         if response.status_code == 202:
             data = response.json()

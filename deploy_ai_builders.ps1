@@ -30,7 +30,7 @@ Write-Host ""
 try {
     $response = Invoke-RestMethod -Uri "$baseUrl/v1/deployments" -Method Post -Headers $headers -Body $deploymentRequest -ErrorAction Stop
     
-    Write-Host "✓ Deployment queued successfully!" -ForegroundColor Green
+    Write-Host "[SUCCESS] Deployment queued successfully!" -ForegroundColor Green
     Write-Host ""
     Write-Host "Service Name: $($response.service_name)" -ForegroundColor Cyan
     Write-Host "Status: $($response.status)" -ForegroundColor Yellow
@@ -46,9 +46,10 @@ try {
         Write-Host $response.streaming_logs -ForegroundColor Gray
     }
 } catch {
-    Write-Host "✗ Deployment failed!" -ForegroundColor Red
+    Write-Host "[ERROR] Deployment failed!" -ForegroundColor Red
     Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
-    if ($_.ErrorDetails.Message) {
-        Write-Host "Details: $($_.ErrorDetails.Message)" -ForegroundColor Red
+    $errorDetails = $_.ErrorDetails.Message
+    if ($errorDetails) {
+        Write-Host "Details: $errorDetails" -ForegroundColor Red
     }
 }
