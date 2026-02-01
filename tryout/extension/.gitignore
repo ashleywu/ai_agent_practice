@@ -1,0 +1,9 @@
+# Chrome Extension build files
+*.crx
+*.pem
+
+# Node modules (if using build tools)
+node_modules/
+
+# Logs
+*.log

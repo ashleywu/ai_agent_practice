@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extension Icon Generator</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    .instructions {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .instructions ol {
+      line-height: 1.8;
+    }
+    .icon-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 30px 0;
+    }
+    .icon-item {
+      text-align: center;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .icon-item canvas {
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .icon-item label {
+      display: block;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    .download-btn {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .download-btn:hover {
+      background: #45a049;
+    }
+    .download-all {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .download-all-btn {
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .download-all-btn:hover {
+      background: #0b7dda;
+    }
+    .preview {
+      margin-top: 20px;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .preview h2 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+    .preview-icons {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>🕐 Extension Icon Generator</h1>
+  
+  <div class="instructions">
+    <h2>使用说明 (Instructions)</h2>
+    <ol>
+      <li><strong>打开文件</strong>：双击 <code>create_icons.html</code> 文件，它会在你的默认浏览器中打开</li>
+      <li><strong>查看图标</strong>：页面会显示三个不同尺寸的图标预览（16x16, 48x48, 128x128）</li>
+      <li><strong>下载图标</strong>：点击每个图标下方的"Download"按钮，或右键点击图标选择"图片另存为"</li>
+      <li><strong>保存位置</strong>：将下载的图标文件保存到 <code>extension/icons/</code> 文件夹</li>
+      <li><strong>文件命名</strong>：确保文件名为 <code>icon16.png</code>, <code>icon48.png</code>, <code>icon128.png</code></li>
+      <li><strong>一键下载</strong>：也可以点击"Download All Icons"按钮一次性下载所有图标</li>
+    </ol>
+  </div>
+
+  <div class="icon-container">
+    <div class="icon-item">
+      <label>16x16 pixels</label>
+      <canvas id="icon16" width="16" height="16"></canvas>
+      <button class="download-btn" onclick="downloadIcon('icon16', 'icon16.png')">Download</button>
+    </div>
+    
+    <div class="icon-item">
+      <label>48x48 pixels</label>
+      <canvas id="icon48" width="48" height="48"></canvas>
+      <button class="download-btn" onclick="downloadIcon('icon48', 'icon48.png')">Download</button>
+    </div>
+    
+    <div class="icon-item">
+      <label>128x128 pixels</label>
+      <canvas id="icon128" width="128" height="128"></canvas>
+      <button class="download-btn" onclick="downloadIcon('icon128', 'icon128.png')">Download</button>
+    </div>
+  </div>
+
+  <div class="download-all">
+    <button class="download-all-btn" onclick="downloadAllIcons()">📥 Download All Icons</button>
+  </div>
+
+  <div class="preview">
+    <h2>图标预览 (Icon Preview)</h2>
+    <p>这些图标会显示在Chrome扩展程序的工具栏和扩展程序管理页面中</p>
+    <div class="preview-icons">
+      <div>
+        <strong>16x16:</strong><br>
+        <canvas id="preview16" width="16" height="16" style="border: 1px solid #ddd; margin-top: 5px;"></canvas>
+      </div>
+      <div>
+        <strong>48x48:</strong><br>
+        <canvas id="preview48" width="48" height="48" style="border: 1px solid #ddd; margin-top: 5px;"></canvas>
+      </div>
+      <div>
+        <strong>128x128:</strong><br>
+        <canvas id="preview128" width="128" height="128" style="border: 1px solid #ddd; margin-top: 5px;"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function drawIcon(canvas, size) {
+      const ctx = canvas.getContext('2d');
+      
+      // Background with gradient
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#4CAF50');
+      gradient.addColorStop(1, '#45a049');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, size, size);
+      
+      // Draw a clock/tracker icon
+      ctx.strokeStyle = 'white';
+      ctx.fillStyle = 'white';
+      ctx.lineWidth = Math.max(1, size / 16);
+      
+      // Circle (clock face)
+      const centerX = size / 2;
+      const centerY = size / 2;
+      const radius = size * 0.35;
+      
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      // Hour hand (pointing up)
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(centerX, centerY - radius * 0.6);
+      ctx.lineWidth = Math.max(1, size / 12);
+      ctx.stroke();
+      
+      // Minute hand (pointing right)
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(centerX + radius * 0.4, centerY);
+      ctx.lineWidth = Math.max(1, size / 16);
+      ctx.stroke();
+    }
+    
+    // Draw all icons
+    drawIcon(document.getElementById('icon16'), 16);
+    drawIcon(document.getElementById('icon48'), 48);
+    drawIcon(document.getElementById('icon128'), 128);
+    
+    // Draw preview icons
+    drawIcon(document.getElementById('preview16'), 16);
+    drawIcon(document.getElementById('preview48'), 48);
+    drawIcon(document.getElementById('preview128'), 128);
+    
+    // Download function
+    function downloadIcon(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      canvas.toBlob(function(blob) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(url);
+      }, 'image/png');
+    }
+    
+    // Download all icons
+    function downloadAllIcons() {
+      downloadIcon('icon16', 'icon16.png');
+      setTimeout(() => downloadIcon('icon48', 'icon48.png'), 200);
+      setTimeout(() => downloadIcon('icon128', 'icon128.png'), 400);
+    }
+  </script>
+</body>
+</html>
